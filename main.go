@@ -1,15 +1,22 @@
 package main
 
 import (
+    "os"
+
     "github.com/gin-gonic/gin"
+    "github.com/joho/godotenv"
+    "github.com/laviande22/gin-sample/api"
 )
 
 func main() {
-    r := gin.Default()
-    r.GET("/ping", func(c *gin.Context) {
-        c.JSON(200, gin.H{
-            "message": "pong",
-        })
-    })
-    r.Run()
+    // load .env environment variables
+    err := godotenv.Load()
+    if err != nil {
+        panic(err)
+    }
+
+    port := os.Getenv("PORT")
+    app := gin.Default()
+    api.ApplyRoutes(app)
+    app.Run(":" + port)
 }
